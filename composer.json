@@ -1,0 +1,21 @@
+{
+    "name": "due/fast",
+    "description": "A Fast Construct Tool Package For The Laravel And Lumen Frameworks.",
+    "authors": [
+        {
+            "name": "fuxiao",
+            "email": "yuebanfuxiao@163.com"
+        }
+    ],
+    "require": {
+        "php": "^7.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Due\\Fast\\": "src/"
+        },
+        "files": [
+            "src/helpers.php"
+        ]
+    }
+}
