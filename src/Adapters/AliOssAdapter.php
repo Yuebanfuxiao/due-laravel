@@ -4,6 +4,10 @@ namespace Due\Fast\Adapters;
 
 use Jacobcyl\AliOSS\AliOssAdapter as OriginAliOssAdapter;
 
+/**
+ * 阿里云OSS适配器
+ * @package Due\Fast\Adapters
+ */
 class AliOssAdapter extends OriginAliOssAdapter
 {
     /**

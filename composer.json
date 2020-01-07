@@ -8,7 +8,20 @@
         }
     ],
     "require": {
-        "php": "^7.1"
+        "php": "^7.1",
+        "ext-json": "*",
+        "dingo/api": "^2.2",
+        "fideloper/proxy": "^4.0",
+        "hhxsv5/laravel-s": "~3.5.0",
+        "jacobcyl/ali-oss-storage": "^2.1",
+        "kosinix/grafika": "dev-master",
+        "mews/captcha": "^2.2",
+        "overtrue/easy-sms": "^1.1",
+        "overtrue/laravel-emoji": "^1.1",
+        "overtrue/laravel-wechat": "~5.0",
+        "predis/predis": "^1.1",
+        "spatie/laravel-permission": "^2.37",
+        "tymon/jwt-auth": "1.*@rc"
     },
     "autoload": {
         "psr-4": {
@@ -17,5 +30,15 @@
         "files": [
             "src/helpers.php"
         ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Due\\Fast\\Providers\\OssServiceProvider",
+                "Due\\Fast\\Providers\\RouteServiceProvider"
+            ],
+            "aliases": {
+            }
+        }
     }
 }
