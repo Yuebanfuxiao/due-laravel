@@ -3,6 +3,7 @@
 namespace Due\Fast\Providers;
 
 use Dingo\Api\Http\Parser\Accept;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Traits\ForwardsCalls;
@@ -25,7 +26,8 @@ class RouteServiceProvider extends ServiceProvider
     {
         // Publish configuration files
         $this->publishes([
-            __DIR__ . '/../../config/route.php' => config_path('route.php')
+            realpath(__DIR__ . '/../../config/api.php') => config_path('api.php'),
+            realpath(__DIR__ . '/../../config/route.php') => config_path('route.php'),
         ], 'config');
 
         $this->setRootControllerNamespace();
@@ -101,7 +103,7 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function map()
     {
-//        $this->mapApiRoutes();
+        $this->mapApiRoutes();
 //
 //        $this->mapAdminRoutes();
 //
@@ -118,45 +120,31 @@ class RouteServiceProvider extends ServiceProvider
 //            ->group(base_path('routes/web.php'));
 //    }
 //
-//    /**
-//     * 映射api路由
-//     */
-//    protected function mapApiRoutes()
-//    {
-//        $accept = (new Accept(
-//            config('api.standardsTree'),
-//            config('api.subtype'),
-//            config('api.version'),
-//            config('api.defaultFormat')
-//        ))->parse(request());
-//
-//        $routeFile = $accept['version'] . '.php';
-//
-//        Route::prefix('api')
-//            ->middleware('api')
-//            ->namespace($this->namespace)
-//            ->group(base_path('routes/api/' . $routeFile));
-//    }
-//
-//    /**
-//     * 映射admin路由
-//     */
-//    protected function mapAdminRoutes()
-//    {
-//        $accept = (new Accept(
-//            config('api.standardsTree'),
-//            config('api.subtype'),
-//            config('api.version'),
-//            config('api.defaultFormat')
-//        ))->parse(request());
-//
-//        $routeFile = $accept['version'] . '.php';
-//
-//        Route::prefix('admin')
-//            ->middleware('api')
-//            ->namespace($this->namespace)
-//            ->group(base_path('routes/admin/' . $routeFile));
-//    }
+    /**
+     * 映射api路由
+     */
+    protected function mapApiRoutes()
+    {
+        $apiRoutes = config('route.routes.api');
+
+        $namespace = config('route.namespace');
+
+        foreach ($apiRoutes as $apiRoute) {
+            $accept = (new Accept(
+                Arr::get($apiRoute, 'standardsTree'),
+                Arr::get($apiRoute, 'subtype'),
+                Arr::get($apiRoute, 'version'),
+                Arr::get($apiRoute, 'defaultFormat')
+            ))->parse(request());
+
+            $routeFile = sprintf('%s.php', $accept['version']);
+//            print_r(Arr::get($apiRoute, 'prefix'));die;
+            Route::prefix(Arr::get($apiRoute, 'prefix'))
+                ->middleware('api')
+                ->namespace($namespace)
+                ->group(base_path(Arr::get($apiRoute, 'routePath') . $routeFile));
+        }
+    }
 
     /**
      * Pass dynamic methods onto the router instance.
